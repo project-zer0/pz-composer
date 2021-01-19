@@ -27,7 +27,7 @@ class PzComposerModule extends PzModule
     {
         return [
             new class($this->getCWD()) extends ProcessCommand {
-                protected static $defaultName = 'composer';
+                protected static $defaultName = 'php:composer';
 
                 public function __construct(private string $cwd)
                 {
@@ -36,7 +36,8 @@ class PzComposerModule extends PzModule
 
                 protected function configure(): void
                 {
-                    $this->setDescription('Dependency Management for PHP');
+                    $this->setDescription('Dependency Management for PHP')
+                        ->setAliases(['composer']);
                 }
 
                 public function getProcess(
