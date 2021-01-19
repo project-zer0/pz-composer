@@ -51,6 +51,7 @@ class PzComposerModule extends PzModule
                         $imageName,
                         $processArgs,
                         interactive: true,
+                        cleanUp: true,
                         workDir: '/project',
                         exec: true
                     ))->addVolume($this->cwd, '/project');
