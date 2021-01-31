@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ProjectZer0\PzComposer;
 
-use LogicException;
 use ProjectZer0\Pz\Config\PzModuleConfigurationInterface;
 use ProjectZer0\Pz\Console\Command\ProcessCommand;
 use ProjectZer0\Pz\Module\PzModule;
@@ -21,18 +20,11 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class PzComposerModule extends PzModule
 {
-    private ?string $cwd = null;
-
     public function getCommands(): array
     {
         return [
-            new class($this->getCWD()) extends ProcessCommand {
+            new class() extends ProcessCommand {
                 protected static $defaultName = 'php:composer';
-
-                public function __construct(private string $cwd)
-                {
-                    parent::__construct();
-                }
 
                 protected function configure(): void
                 {
@@ -54,7 +46,7 @@ class PzComposerModule extends PzModule
                         cleanUp: true,
                         workDir: '/project',
                         exec: true
-                    ))->addVolume($this->cwd, '/project');
+                    ))->addVolume('$PZ_PWD', '/project');
                 }
             },
         ];
@@ -62,7 +54,6 @@ class PzComposerModule extends PzModule
 
     public function boot(ProjectZer0Toolkit $toolkit): void
     {
-        $this->cwd = $toolkit->getCurrentDirectory();
     }
 
     /**
@@ -88,14 +79,5 @@ class PzComposerModule extends PzModule
     public function getName(): string
     {
         return 'composer';
-    }
-
-    private function getCWD(): string
-    {
-        if (null === $this->cwd) {
-            throw new LogicException('PzModule was not initialized correctly');
-        }
-
-        return $this->cwd;
     }
 }
